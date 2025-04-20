@@ -12,6 +12,7 @@ api_bp = Blueprint('api', __name__, url_prefix='/api')
 # Import routes to register them with the blueprint
 from routes.solve_routes import *
 from routes.health_routes import *
+from routes.user_routes import *
 
 def register_routes(app):
     """

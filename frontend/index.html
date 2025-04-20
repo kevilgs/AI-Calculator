@@ -38,6 +38,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/draw-mode.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/text-mode.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/user-auth.css') }}">
   
   <!-- Add Google Fonts for better typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,19 +49,32 @@
   <div class="container main-content">
     <header class="header">
       <div class="logo">MathSolver AI</div>
-      <div class="mode-selector">
-        <button class="mode-btn active" data-mode="draw">Draw Mode</button>
-        <button class="mode-btn" data-mode="text">Text Mode</button>
+      <div class="header-actions">
+        <div class="mode-selector">
+          <button class="mode-btn active" data-mode="draw">Draw Mode</button>
+          <button class="mode-btn" data-mode="text">Text Mode</button>
+        </div>
+        <div class="auth-links">
+          <span id="user-display" style="display: none;">
+            Welcome, <span id="username-display"></span> | 
+            <a href="/dashboard">My Calculations</a> | 
+            <a href="#" id="logout-link">Logout</a>
+          </span>
+          <!-- Login/Register links removed as they're unnecessary with redirect flow -->
+        </div>
       </div>
     </header>
 
     <div class="topic-selection">
-      <label for="topic">Select Math Topic:</label>
-      <select id="topic">
+      <label for="operation-type">Select Math Topic:</label>
+      <select id="operation-type">
         <option value="solve">Equation Solving</option>
         <option value="laplace">Laplace Transform</option>
         <option value="fourier">Fourier Series</option>
       </select>
+      
+      <!-- Save Calculation Button (only shown when logged in and solution available) -->
+      <button id="save-calculation" style="display: none;">Save Calculation</button>
     </div>
 
     <main id="main-content">
@@ -72,10 +86,11 @@
     </div>
   </div>
 
-  <!-- JavaScript Files - NON-MODULAR VERSION -->
+  <!-- JavaScript Files -->
   <script src="/frontend/scripts/solution.js"></script>
   <script src="/frontend/scripts/draw-mode.js"></script>
   <script src="/frontend/scripts/text-mode.js"></script>
+  <script src="/frontend/scripts/user-auth.js"></script>
   <script src="/frontend/scripts/main.js"></script>
 </body>
 </html>

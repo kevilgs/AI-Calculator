@@ -26,6 +26,12 @@ DB_CONFIG = {
     'database': 'calculator_cache'
 }
 
+# SQLAlchemy database URI (using MySQL)
+SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{DB_CONFIG['user']}:{DB_CONFIG['password']}@{DB_CONFIG['host']}/{DB_CONFIG['database']}"
+
+# Application secret key (for sessions and JWT)
+SECRET_KEY = 'your-secret-key-here'  # Change this to a secure random string in production
+
 # AI settings
 GEMINI_MODEL = 'models/gemini-1.5-pro'
 

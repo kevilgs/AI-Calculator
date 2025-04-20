@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MathSolver AI - Login</title>
+  
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/user-auth.css') }}">
+  
+  <!-- Add Google Fonts for better typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container auth-page">
+    <header class="header">
+      <div class="logo">MathSolver AI</div>
+      <div class="nav-links">
+        <a href="/">Home</a>
+      </div>
+    </header>
+
+    <div class="auth-container">
+      <!-- Login Form -->
+      <form id="login-form" class="auth-form">
+        <h2>Login</h2>
+        <div class="form-group">
+          <label for="login-username">Username</label>
+          <input type="text" id="login-username" name="username" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" name="password" required>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+        <div id="login-error" class="auth-error"></div>
+        <div id="login-success" class="auth-success"></div>
+        <div class="auth-switch">
+          <span>Don't have an account?</span>
+          <a href="/register">Register</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript Files -->
+  <script src="/frontend/scripts/user-auth.js"></script>
+</body>
+</html>

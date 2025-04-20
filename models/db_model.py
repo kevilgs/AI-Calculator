@@ -9,6 +9,60 @@ import os
 from datetime import datetime
 from typing import Dict, Any, Optional
 from config.settings import DB_CONFIG
+import uuid
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+
+db = SQLAlchemy()
+
+class User(db.Model):
+    """User model for authentication and saved calculations."""
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    username = db.Column(db.String(64), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime)
+    
+    # Relationship to SavedCalculation
+    calculations = db.relationship('SavedCalculation', backref='user', lazy='dynamic')
+    
+    def set_password(self, password):
+        """Hash the password for secure storage."""
+        self.password_hash = generate_password_hash(password)
+        
+    def check_password(self, password):
+        """Check if the provided password matches the stored hash."""
+        return check_password_hash(self.password_hash, password)
+        
+    def __repr__(self):
+        return f'<User {self.username}>'
+
+class SavedCalculation(db.Model):
+    """Model to store user's saved calculations."""
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
+    latex_input = db.Column(db.Text, nullable=False)
+    operation_type = db.Column(db.String(20), nullable=False)  # 'solve', 'laplace', 'fourier', etc.
+    solution = db.Column(db.Text)
+    ai_explanation = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    title = db.Column(db.String(100))  # Optional title for the calculation
+    
+    def to_dict(self):
+        """Convert model to dictionary for API response."""
+        return {
+            'id': self.id,
+            'title': self.title,
+            'latex_input': self.latex_input,
+            'operation_type': self.operation_type,
+            'solution': self.solution,
+            'ai_explanation': self.ai_explanation,
+            'created_at': self.created_at.isoformat()
+        }
+        
+    def __repr__(self):
+        return f'<SavedCalculation {self.id}>'
 
 class DatabaseManager:
     """Database manager for the calculator application"""

@@ -6,10 +6,10 @@ It integrates LaTeX parsing, mathematical computation, and AI explanations.
 """
 import os
 import flask
-from flask import Flask, render_template, send_from_directory, jsonify
+from flask import Flask, render_template, send_from_directory, jsonify, redirect
 
 # Import configuration
-from config.settings import CACHE_DIR
+from config.settings import CACHE_DIR, SQLALCHEMY_DATABASE_URI, SECRET_KEY
 
 # Import services
 from services.latex_service import latex_to_sympy
@@ -18,6 +18,10 @@ from services.ai_service import AIService
 from services.cache_service import CacheService
 from services.sage_service import SageService
 from services.gemini_service import GeminiService
+from services.user_service import UserService
+
+# Import database models
+from models.db_model import db
 
 # Import routes
 from routes import register_routes
@@ -29,12 +33,24 @@ def create_app():
                 static_folder='frontend',
                 template_folder='frontend')
     
+    # Configure the app
+    app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SECRET_KEY'] = SECRET_KEY
+    
+    # Initialize database
+    db.init_app(app)
+    
     # Setup logging
     if app.debug:
         app.logger.setLevel('DEBUG')
     
     # Initialize services
     initialize_services(app)
+    
+    # Create database tables
+    with app.app_context():
+        db.create_all()
     
     # Register routes
     register_routes(app)
@@ -70,6 +86,10 @@ def initialize_services(app):
     gemini_service = GeminiService()
     app.gemini_service = gemini_service
     
+    # User service - for authentication and saved calculations
+    user_service = UserService()
+    app.user_service = user_service
+    
     # Log service availability
     if sage_service.available:
         app.logger.info("SageMath service is available")
@@ -85,8 +105,50 @@ def setup_basic_routes(app):
     """Setup basic routes that are not part of the API"""
     @app.route('/')
     def index() -> str:
-        """Serve the main page"""
+        """Serve the main page, but redirect to auth if not logged in"""
+        # Check for authentication cookie/session
+        auth_token = flask.request.cookies.get('authToken')
+        
+        # If no auth token, redirect to auth page
+        if not auth_token:
+            return redirect('/auth')
+            
+        # Otherwise serve the main app
         return render_template('index.html')  # type: ignore
+
+    @app.route('/login')
+    def login() -> str:
+        """Serve the login page"""
+        return render_template('login.html')
+        
+    @app.route('/register')
+    def register() -> str:
+        """Serve the registration page"""
+        return render_template('register.html')
+        
+    @app.route('/dashboard')
+    def dashboard() -> str:
+        """Serve the user dashboard page"""
+        # Check for authentication cookie/session
+        auth_token = flask.request.cookies.get('authToken')
+        
+        # If no auth token, redirect to auth page
+        if not auth_token:
+            return redirect('/auth')
+            
+        return render_template('dashboard.html')
+        
+    @app.route('/auth')
+    def auth() -> str:
+        """Serve the new combined auth page"""
+        return render_template('auth.html')
+        
+    @app.route('/logout')
+    def logout() -> str:
+        """Handle logout and redirect to auth page"""
+        response = redirect('/auth')
+        response.delete_cookie('authToken')
+        return response
 
     @app.route('/node_modules/<path:filename>')
     def serve_node_modules(filename) -> flask.Response:  # type: ignore

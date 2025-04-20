@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MathSolver AI - My Calculations</title>
+  
+  <!-- MathJax for LaTeX rendering -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/user-auth.css') }}">
+  
+  <!-- Add Google Fonts for better typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container dashboard-page">
+    <header class="header">
+      <div class="logo">MathSolver AI</div>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/logout" id="logout-link">Logout</a>
+      </div>
+    </header>
+
+    <!-- User Profile Section -->
+    <div id="user-section" class="user-section">
+      <div class="user-info">
+        <div class="user-avatar">
+          <span id="user-initial"></span>
+        </div>
+        <span>Welcome, <span id="user-name"></span></span>
+      </div>
+    </div>
+
+    <!-- Saved Calculations Section -->
+    <div id="saved-calculations" class="saved-calculations-container">
+      <h2>Your Saved Calculations</h2>
+      <div id="calculations-list">
+        <!-- Saved calculations will be loaded here -->
+        <p class="loading-text">Loading your calculations...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Files -->
+  <script src="/frontend/scripts/user-auth.js"></script>
+  <script src="/frontend/scripts/dashboard.js"></script>
+</body>
+</html>

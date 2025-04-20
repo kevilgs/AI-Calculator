@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MathSolver AI - Sign In</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Main color palette - matching your existing theme */
+      --primary: #6200ea;       /* Deep purple */
+      --primary-light: #9d46ff;
+      --primary-dark: #0a00b6;
+      --secondary: #00bcd4;     /* Cyan */
+      --secondary-light: #62efff;
+      --secondary-dark: #008ba3;
+      --accent: #ff4081;        /* Pink accent */
+      
+      /* UI colors */
+      --background: #f8f9ff;
+      --card-bg: #ffffff;
+      --text-primary: #37374a;
+      --text-secondary: #6b6b80;
+      --border: #e0e0f5;
+      --divider: #e9e9f5;
+      --error: #f44336;
+      
+      /* Shadows */
+      --shadow-sm: 0 2px 8px rgba(98, 0, 234, 0.06);
+      --shadow-md: 0 4px 12px rgba(98, 0, 234, 0.1);
+      --shadow-lg: 0 8px 24px rgba(98, 0, 234, 0.15);
+      
+      /* Animation */
+      --transition-speed: 0.3s;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--background);
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 450px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .auth-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .auth-header {
+      padding: 1.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .logo::before {
+      content: "✦";
+      margin-right: 8px;
+      color: white;
+      font-size: 1.6rem;
+    }
+
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 1rem;
+      text-align: center;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-speed) ease;
+    }
+
+    .auth-tab.active {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+    }
+
+    .auth-body {
+      padding: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      transition: all var(--transition-speed) ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.1);
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .password-hint {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    .error-message {
+      color: var(--error);
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+      min-height: 1.2rem;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all var(--transition-speed) ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .submit-btn .arrow {
+      margin-left: 8px;
+    }
+
+    .bottom-text {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .bottom-text a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="logo">MathSolver AI</div>
+      </div>
+      
+      <div class="auth-tabs">
+        <div class="auth-tab active" data-form="login">Sign In</div>
+        <div class="auth-tab" data-form="register">Create Account</div>
+      </div>
+      
+      <div class="auth-body">
+        <form id="authForm">
+          <div class="form-group name-group hidden">
+            <label for="name">Username</label>
+            <input type="text" id="name" name="name" placeholder="Enter your username">
+            <div class="error-message" id="name-error"></div>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com">
+            <div class="error-message" id="email-error"></div>
+          </div>
+          
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+              <input type="password" id="password" name="password" placeholder="Enter your password">
+              <button type="button" class="toggle-password" id="togglePassword">👁️</button>
+            </div>
+            <div class="password-hint hidden">Password must be at least 8 characters with uppercase, lowercase, number and special character.</div>
+            <div class="error-message" id="password-error"></div>
+          </div>
+          
+          <div class="form-group">
+            <div class="error-message" id="general-error"></div>
+          </div>
+          
+          <button type="submit" class="submit-btn">
+            Sign In <span class="arrow">→</span>
+          </button>
+        </form>
+        
+        <p class="bottom-text">
+          Need to create an account? <a href="#" id="toggleAuthMode">Sign Up</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const authForm = document.getElementById('authForm');
+      const tabs = document.querySelectorAll('.auth-tab');
+      const nameGroup = document.querySelector('.name-group');
+      const passwordHint = document.querySelector('.password-hint');
+      const submitBtn = document.querySelector('.submit-btn');
+      const toggleAuthLink = document.getElementById('toggleAuthMode');
+      const togglePasswordBtn = document.getElementById('togglePassword');
+      
+      let isLogin = true;
+
+      // Toggle between login and register
+      function toggleAuthMode(mode) {
+        isLogin = mode === 'login';
+        
+        // Update tab state
+        tabs.forEach(tab => {
+          tab.classList.toggle('active', tab.dataset.form === mode);
+        });
+        
+        // Show/hide name field and password hint
+        nameGroup.classList.toggle('hidden', isLogin);
+        passwordHint.classList.toggle('hidden', isLogin);
+        
+        // Update button text
+        submitBtn.innerHTML = `${isLogin ? 'Sign In' : 'Create Account'} <span class="arrow">→</span>`;
+        
+        // Update bottom text
+        toggleAuthLink.textContent = isLogin ? 'Sign Up' : 'Sign In';
+        document.querySelector('.bottom-text').innerHTML = isLogin ?
+          'Need to create an account? <a href="#" id="toggleAuthMode">Sign Up</a>' :
+          'Already have an account? <a href="#" id="toggleAuthMode">Sign In</a>';
+        
+        // Re-attach event listener to link
+        document.getElementById('toggleAuthMode').addEventListener('click', (e) => {
+          e.preventDefault();
+          toggleAuthMode(isLogin ? 'register' : 'login');
+        });
+        
+        // Clear form and errors
+        clearErrors();
+        authForm.reset();
+      }
+
+      // Add click event to tabs
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          toggleAuthMode(tab.dataset.form);
+        });
+      });
+
+      // Add click event to toggle link
+      toggleAuthLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleAuthMode(isLogin ? 'register' : 'login');
+      });
+
+      // Toggle password visibility
+      togglePasswordBtn.addEventListener('click', () => {
+        const passwordInput = document.getElementById('password');
+        const type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = type;
+        togglePasswordBtn.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+      });
+
+      // Clear all errors
+      function clearErrors() {
+        document.getElementById('name-error').textContent = '';
+        document.getElementById('email-error').textContent = '';
+        document.getElementById('password-error').textContent = '';
+        document.getElementById('general-error').textContent = '';
+      }
+
+      // Validate email
+      function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      }
+
+      // Validate password
+      function validatePassword(password) {
+        const minLength = 8;
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumbers = /\d/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+        const errors = [];
+        if (password.length < minLength) errors.push("at least 8 characters");
+        if (!hasUpperCase) errors.push("an uppercase letter");
+        if (!hasLowerCase) errors.push("a lowercase letter");
+        if (!hasNumbers) errors.push("a number");
+        if (!hasSpecialChar) errors.push("a special character");
+
+        return errors;
+      }
+
+      // Set a cookie
+      function setCookie(name, value, days) {
+        let expires = "";
+        if (days) {
+          const date = new Date();
+          date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+          expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
+      }
+
+      // Form submission
+      authForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearErrors();
+
+        const formData = new FormData(authForm);
+        let hasError = false;
+
+        // Validate name for registration
+        if (!isLogin && !formData.get('name').trim()) {
+          document.getElementById('name-error').textContent = 'Username is required';
+          hasError = true;
+        }
+
+        // Validate email
+        if (!validateEmail(formData.get('email'))) {
+          document.getElementById('email-error').textContent = 'Please enter a valid email address';
+          hasError = true;
+        }
+
+        // Validate password
+        const passwordErrors = validatePassword(formData.get('password'));
+        if (!isLogin && passwordErrors.length > 0) {
+          document.getElementById('password-error').textContent = 
+            `Password must contain ${passwordErrors.join(', ')}`;
+          hasError = true;
+        } else if (isLogin && !formData.get('password').trim()) {
+          document.getElementById('password-error').textContent = 'Password is required';
+          hasError = true;
+        }
+
+        if (!hasError) {
+          try {
+            // Convert formData to object
+            const formDataObj = {};
+            formData.forEach((value, key) => {
+              formDataObj[key] = value;
+            });
+            
+            // Create payload for API
+            const payload = {
+              email: formDataObj.email,
+              password: formDataObj.password
+            };
+            
+            // Add username field for registration
+            if (!isLogin) {
+              payload.username = formDataObj.name;
+            }
+            
+            // Make API call
+            const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
+            const response = await fetch(endpoint, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(payload)
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+              // Handle successful login/registration
+              if (isLogin) {
+                // Store auth token and user info
+                localStorage.setItem('authToken', data.token);
+                localStorage.setItem('currentUser', JSON.stringify(data.user));
+                
+                // Set the auth cookie
+                setCookie('authToken', data.token, 7); // 7 days
+                
+                // Redirect to home page
+                window.location.href = '/';
+              } else {
+                // Registration success - switch to login
+                toggleAuthMode('login');
+                document.getElementById('general-error').textContent = 'Registration successful! Please login.';
+                document.getElementById('general-error').style.color = '#4caf50'; // Green success color
+              }
+            } else {
+              // Handle error response
+              document.getElementById('general-error').textContent = data.error || 
+                (isLogin ? 'Login failed. Please check your credentials.' : 'Registration failed.');
+            }
+          } catch (error) {
+            console.error('Auth error:', error);
+            document.getElementById('general-error').textContent = 'An error occurred. Please try again.';
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
