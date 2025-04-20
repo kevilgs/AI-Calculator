@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="HandheldFriendly" content="true">
+  <title>MathSolver AI - Interactive Calculator</title>
+  
+  <!-- KaTeX for LaTeX rendering in the results -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  
+  <!-- MathJax for better LaTeX rendering -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  <!-- MyScript iink styles -->
+  <link rel="stylesheet" href="/node_modules/iink-ts/dist/iink.css">
+  
+  <!-- Use iink from node_modules -->
+  <script src="/node_modules/iink-ts/dist/iink.min.js"></script>
+  
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/draw-mode.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/text-mode.css') }}">
+  
+  <!-- Add Google Fonts for better typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container main-content">
+    <header class="header">
+      <div class="logo">MathSolver AI</div>
+      <div class="mode-selector">
+        <button class="mode-btn active" data-mode="draw">Draw Mode</button>
+        <button class="mode-btn" data-mode="text">Text Mode</button>
+      </div>
+    </header>
+
+    <div class="topic-selection">
+      <label for="topic">Select Math Topic:</label>
+      <select id="topic">
+        <option value="solve">Equation Solving</option>
+        <option value="laplace">Laplace Transform</option>
+        <option value="fourier">Fourier Series</option>
+      </select>
+    </div>
+
+    <main id="main-content">
+      <!-- Content will be loaded dynamically based on selected mode -->
+    </main>
+
+    <div class="solution-container">
+      <!-- The solution and steps will be dynamically added here -->
+    </div>
+  </div>
+
+  <!-- JavaScript Files - NON-MODULAR VERSION -->
+  <script src="/frontend/scripts/solution.js"></script>
+  <script src="/frontend/scripts/draw-mode.js"></script>
+  <script src="/frontend/scripts/text-mode.js"></script>
+  <script src="/frontend/scripts/main.js"></script>
+</body>
+</html>

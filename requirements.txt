@@ -1,0 +1,9 @@
+flask==2.3.3
+sympy==1.12
+requests==2.31.0  # Added for SageMath API communication
+torch
+transformers
+accelerate
+bitsandbytes
+tqdm
+optimum[intel]
