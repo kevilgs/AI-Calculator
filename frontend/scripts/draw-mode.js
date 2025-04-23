@@ -224,13 +224,13 @@ class DrawMode {
             solveButton.textContent = 'Solving...';
             
             try {
-              // Get the selected operation type from the topic select dropdown
-              const topicSelect = document.getElementById('topic');
+              // Get the selected operation type from the operation-type dropdown
+              const operationTypeSelect = document.getElementById('operation-type');
               let operationType = 'solve';
               
-              if (topicSelect) {
-                // Use the selected topic if available
-                operationType = topicSelect.value;
+              if (operationTypeSelect) {
+                // Use the selected operation type
+                operationType = operationTypeSelect.value;
               } else {
                 // Fallback to automatic detection based on content
                 if (latex.includes('\\mathcal{L}') || latex.includes('laplace')) {
@@ -433,6 +433,67 @@ class DrawMode {
     
     // Scroll to the solution
     solutionContainer.scrollIntoView({behavior: 'smooth'});
+    
+    // Auto-save the calculation if the user is authenticated
+    // Check if the saveCurrentCalculation function exists and user is authenticated
+    if (window.isAuthenticated && typeof window.saveCurrentCalculation === 'function' && !solution.error) {
+      // Auto-save with a brief delay to ensure UI is updated first
+      setTimeout(() => {
+        console.log("Auto-saving calculation...");
+        this.autoSaveCalculation(solution);
+      }, 1000);
+    }
+  }
+  
+  autoSaveCalculation(solution) {
+    // Log auto-save attempt to help with debugging
+    console.log("Attempting to auto-save calculation...");
+    console.log("Authentication state:", window.isAuthenticated);
+    
+    // Get the current LaTeX input
+    const resultElement = document.getElementById("result");
+    const latexInput = resultElement.dataset.latex;
+    
+    if (!latexInput || !solution.solution) {
+      console.error("Missing required data for auto-save", {
+        latexInput: latexInput ? "exists" : "missing",
+        solution: solution.solution ? "exists" : "missing"
+      });
+      return;
+    }
+    
+    // Get operation type
+    const operationTypeSelect = document.getElementById('operation-type');
+    const operationType = operationTypeSelect ? operationTypeSelect.value : 'solve';
+    
+    // Format the solution text
+    const solutionText = Array.isArray(solution.solution) ? solution.solution.join(', ') : solution.solution;
+    
+    // Get explanation if available
+    const explanation = solution.ai_steps ? solution.ai_steps.join('\n') : '';
+    
+    // Generate a basic title based on operation type and date
+    const title = `${operationType.charAt(0).toUpperCase() + operationType.slice(1)} - ${new Date().toLocaleString()}`;
+    
+    console.log("Auto-saving calculation with:", {
+      latexInput: latexInput.substring(0, 20) + "...",
+      operationType,
+      title
+    });
+    
+    // Call the save function without manually set parameters so it will use the form values
+    if (typeof window.saveCurrentCalculation === 'function') {
+      // Important: We are providing all parameters explicitly to avoid issues with auto-detection
+      window.saveCurrentCalculation(
+        latexInput,
+        solutionText,
+        operationType,
+        explanation,
+        title
+      );
+    } else {
+      console.error("saveCurrentCalculation function not available globally");
+    }
   }
   
   displayError(errorMessage) {

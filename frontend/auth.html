@@ -233,10 +233,16 @@
             <div class="error-message" id="name-error"></div>
           </div>
           
-          <div class="form-group">
+          <div class="form-group email-group hidden">
             <label for="email">Email Address</label>
             <input type="email" id="email" name="email" placeholder="you@example.com">
             <div class="error-message" id="email-error"></div>
+          </div>
+          
+          <div class="form-group username-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username">
+            <div class="error-message" id="username-error"></div>
           </div>
           
           <div class="form-group">
@@ -270,6 +276,8 @@
       const authForm = document.getElementById('authForm');
       const tabs = document.querySelectorAll('.auth-tab');
       const nameGroup = document.querySelector('.name-group');
+      const emailGroup = document.querySelector('.email-group');
+      const usernameGroup = document.querySelector('.username-group');
       const passwordHint = document.querySelector('.password-hint');
       const submitBtn = document.querySelector('.submit-btn');
       const toggleAuthLink = document.getElementById('toggleAuthMode');
@@ -286,8 +294,10 @@
           tab.classList.toggle('active', tab.dataset.form === mode);
         });
         
-        // Show/hide name field and password hint
+        // Show/hide fields based on form type
         nameGroup.classList.toggle('hidden', isLogin);
+        emailGroup.classList.toggle('hidden', isLogin);
+        usernameGroup.classList.toggle('hidden', !isLogin);
         passwordHint.classList.toggle('hidden', isLogin);
         
         // Update button text
@@ -335,6 +345,7 @@
       function clearErrors() {
         document.getElementById('name-error').textContent = '';
         document.getElementById('email-error').textContent = '';
+        document.getElementById('username-error').textContent = '';
         document.getElementById('password-error').textContent = '';
         document.getElementById('general-error').textContent = '';
       }
@@ -388,9 +399,15 @@
           hasError = true;
         }
 
-        // Validate email
-        if (!validateEmail(formData.get('email'))) {
+        // Validate email for registration
+        if (!isLogin && !validateEmail(formData.get('email'))) {
           document.getElementById('email-error').textContent = 'Please enter a valid email address';
+          hasError = true;
+        }
+
+        // Validate username for login
+        if (isLogin && !formData.get('username').trim()) {
+          document.getElementById('username-error').textContent = 'Username is required';
           hasError = true;
         }
 
@@ -415,13 +432,15 @@
             
             // Create payload for API
             const payload = {
-              email: formDataObj.email,
               password: formDataObj.password
             };
             
-            // Add username field for registration
-            if (!isLogin) {
+            // For login, use username; for registration, add both fields
+            if (isLogin) {
+              payload.username = formDataObj.username;
+            } else {
               payload.username = formDataObj.name;
+              payload.email = formDataObj.email;
             }
             
             // Make API call
@@ -469,3 +488,4 @@
   </script>
 </body>
 </html>
+``` 

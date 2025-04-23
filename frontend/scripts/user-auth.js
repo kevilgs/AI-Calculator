@@ -19,6 +19,9 @@ function initAuth() {
         try {
             currentUser = JSON.parse(userJson);
             isAuthenticated = true;
+            // Make authentication state available globally
+            window.isAuthenticated = true;
+            window.authToken = authToken;
             // Ensure the auth cookie is set (in case it was only in localStorage)
             setCookie('authToken', authToken, 7);
             updateAuthUI();
@@ -27,6 +30,8 @@ function initAuth() {
             logout(); // Clear invalid data
         }
     } else {
+        window.isAuthenticated = false;
+        window.authToken = null;
         updateAuthUI();
     }
 
@@ -80,7 +85,7 @@ function setupPageSpecificHandlers() {
     // Check if we're on the main calculator page
     const saveCalculationBtn = document.getElementById('save-calculation');
     if (saveCalculationBtn) {
-        saveCalculationBtn.addEventListener('click', saveCurrentCalculation);
+        saveCalculationBtn.addEventListener('click', () => saveCurrentCalculation());
     }
     
     // If we're on the main page and there's a calculation ID in the URL, load it
@@ -203,36 +208,50 @@ async function loadSavedCalculation(calculationId) {
 
 /**
  * Save the current calculation
+ * Can be called automatically after solving or manually via button
  */
-async function saveCurrentCalculation() {
+async function saveCurrentCalculation(
+  manualLatexInput = null, 
+  manualSolution = null, 
+  manualOperationType = null, 
+  manualExplanation = null, 
+  manualTitle = null
+) {
     if (!isAuthenticated || !authToken) {
         alert('Please log in to save calculations');
         return;
     }
     
-    // Get current calculation data
-    const latexInput = window.currentMode === 'text' 
+    // Get current calculation data - either from parameters or from DOM
+    const latexInput = manualLatexInput || (window.currentMode === 'text' 
         ? document.getElementById('latex-input').value
-        : document.getElementById('drawing-latex-result').textContent;
+        : document.getElementById('drawing-latex-result') 
+          ? document.getElementById('drawing-latex-result').textContent
+          : document.getElementById('result')?.dataset?.latex || '');
     
     const solutionContainer = document.querySelector('.solution-container');
-    const solution = solutionContainer.textContent.trim();
+    const solution = manualSolution || (solutionContainer ? solutionContainer.textContent.trim() : '');
     
     if (!latexInput || !solution) {
-        alert('No calculation to save');
+        if (!manualLatexInput && !manualSolution) {
+            alert('No calculation to save');
+        }
         return;
     }
     
     // Get operation type
     const operationTypeSelect = document.getElementById('operation-type');
-    const operationType = operationTypeSelect.value;
+    const operationType = manualOperationType || (operationTypeSelect ? operationTypeSelect.value : 'solve');
     
     // Get explanation if available
     const explanationContainer = document.querySelector('.explanation-container');
-    const explanation = explanationContainer ? explanationContainer.textContent.trim() : '';
+    const explanation = manualExplanation || (explanationContainer ? explanationContainer.textContent.trim() : '');
     
-    // Optional title
-    const title = prompt('Enter a title for this calculation (optional):');
+    // Optional title - use provided or prompt user
+    let title = manualTitle;
+    if (!title && !manualLatexInput) {  // Only prompt if not auto-saving
+        title = prompt('Enter a title for this calculation (optional):');
+    }
     
     try {
         const response = await fetch('/api/calculations', {
@@ -253,15 +272,36 @@ async function saveCurrentCalculation() {
         const data = await response.json();
         
         if (response.ok && data.success) {
-            alert('Calculation saved successfully! View it in My Calculations.');
+            if (!manualLatexInput) {  // Don't show alert if auto-saving
+                alert('Calculation saved successfully! View it in My Calculations.');
+            } else {
+                console.log('Calculation auto-saved successfully');
+                
+                // Show save calculation button to indicate it was saved
+                const saveCalculationBtn = document.getElementById('save-calculation');
+                if (saveCalculationBtn) {
+                    saveCalculationBtn.textContent = 'Saved!';
+                    setTimeout(() => {
+                        saveCalculationBtn.textContent = 'Save Calculation';
+                    }, 2000);
+                }
+            }
         } else {
-            alert('Error saving calculation: ' + (data.error || 'Unknown error'));
+            console.error('Error saving calculation:', data.error || 'Unknown error');
+            if (!manualLatexInput) {  // Don't show alert if auto-saving
+                alert('Error saving calculation: ' + (data.error || 'Unknown error'));
+            }
         }
     } catch (error) {
         console.error('Error saving calculation:', error);
-        alert('Error saving calculation. Please try again.');
+        if (!manualLatexInput) {  // Don't show alert if auto-saving
+            alert('Error saving calculation. Please try again.');
+        }
     }
 }
+
+// Make saveCurrentCalculation globally available
+window.saveCurrentCalculation = saveCurrentCalculation;
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
