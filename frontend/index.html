@@ -46,24 +46,25 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div class="navbar">
+    <div class="navbar-left">
+      <a href="/index.html" class="nav-logo">MathSolver AI</a>
+      <a href="/index.html" class="nav-link active">Calculator</a>
+      <a href="/dashboard" class="nav-link">Dashboard</a>
+    </div>
+    <div class="navbar-right">
+      <span id="username-display-nav" style="display: none;"></span>
+      <a href="#" id="logout-link" class="nav-link logout-btn">Logout</a>
+    </div>
+  </div>
+
   <div class="container main-content">
-    <header class="header">
-      <div class="logo">MathSolver AI</div>
-      <div class="header-actions">
-        <div class="mode-selector">
-          <button class="mode-btn active" data-mode="draw">Draw Mode</button>
-          <button class="mode-btn" data-mode="text">Text Mode</button>
-        </div>
-        <div class="auth-links">
-          <span id="user-display" style="display: none;">
-            Welcome, <span id="username-display"></span> | 
-            <a href="/dashboard">My Calculations</a> | 
-            <a href="#" id="logout-link">Logout</a>
-          </span>
-          <!-- Login/Register links removed as they're unnecessary with redirect flow -->
-        </div>
+    <div class="mode-selector-container">
+      <div class="mode-selector">
+        <button class="mode-btn active" data-mode="draw">Draw Mode</button>
+        <button class="mode-btn" data-mode="text">Text Mode</button>
       </div>
-    </header>
+    </div>
 
     <div class="topic-selection">
       <label for="operation-type">Select Math Topic:</label>

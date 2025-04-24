@@ -28,6 +28,9 @@
   
   /* Animation */
   --transition-speed: 0.3s;
+  
+  /* Navbar height */
+  --navbar-height: 64px;
 }
 
 body {
@@ -37,6 +40,112 @@ body {
   line-height: 1.6;
   margin: 0;
   padding: 0;
+  padding-top: calc(var(--navbar-height) + 20px); /* Add padding for fixed navbar */
+}
+
+/* Navbar styles */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--navbar-height);
+  background-color: var(--card-bg);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem; /* Reduced horizontal padding */
+  z-index: 1000;
+  border-bottom: 1px solid var(--divider);
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.navbar-left, .navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-left {
+  flex: 1; /* Take available space but allow navbar-right to have its natural width */
+  overflow: hidden; /* Prevent overflow */
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0; /* Don't allow this to shrink */
+}
+
+.nav-logo {
+  font-size: 1.5rem; /* Slightly smaller font */
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+  margin-right: 1.5rem; /* Reduced margin */
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.nav-logo::before {
+  content: "✦";
+  margin-right: 6px; /* Smaller margin */
+  color: var(--accent);
+  font-size: 1.4rem; /* Slightly smaller */
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 0.8rem; /* Reduced padding */
+  margin: 0 0.3rem; /* Reduced margin */
+  border-radius: 8px;
+  transition: all var(--transition-speed) ease;
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  background-color: rgba(98, 0, 234, 0.05);
+  color: var(--primary);
+}
+
+.nav-link.active {
+  color: var(--primary);
+  background-color: rgba(98, 0, 234, 0.08);
+}
+
+.logout-btn {
+  background-color: var(--accent);
+  color: white;
+  padding: 0.5rem 1rem; /* Reduced padding */
+  border-radius: 8px;
+  margin-left: 0.5rem; /* Reduced margin */
+  white-space: nowrap;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.logout-btn:hover {
+  background-color: #e91e63;
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+#username-display-nav {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-right: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px; /* Reduced max width */
+}
+
+.mode-selector-container {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0 2rem;
 }
 
 .container {
@@ -293,5 +402,31 @@ body {
   
   .topic-selection select {
     width: 100%;
+  }
+  
+  /* Mobile navbar adjustments */
+  .navbar {
+    padding: 0 0.5rem;
+  }
+  
+  .nav-logo {
+    font-size: 1.2rem;
+    margin-right: 0.8rem;
+  }
+  
+  .nav-link {
+    padding: 0.4rem 0.6rem;
+    margin: 0 0.2rem;
+    font-size: 0.9rem;
+  }
+  
+  .logout-btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.9rem;
+  }
+  
+  #username-display-nav {
+    max-width: 80px;
+    font-size: 0.9rem;
   }
 }

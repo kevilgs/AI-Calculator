@@ -21,6 +21,10 @@
   </script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   
+  <!-- jsPDF for PDF conversion -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
   <!-- CSS Files -->
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/user-auth.css') }}">
@@ -31,14 +35,29 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div class="navbar">
+    <div class="navbar-left">
+      <a href="/" class="nav-logo">MathSolver AI</a>
+      <a href="/" class="nav-link">Calculator</a>
+      <a href="/dashboard" class="nav-link active">Dashboard</a>
+    </div>
+    <div class="navbar-right">
+      <span id="username-display-nav" style="display: none;"></span>
+      <a href="#" id="logout-link" class="nav-link logout-btn">Logout</a>
+    </div>
+  </div>
+
   <div class="container dashboard-page">
-    <header class="header">
-      <div class="logo">MathSolver AI</div>
-      <div class="nav-links">
-        <a href="/">Home</a>
-        <a href="/logout" id="logout-link">Logout</a>
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <h1>My Calculations</h1>
+      <div class="dashboard-stats">
+        <div class="stat-card">
+          <span class="stat-number" id="total-calculations">0</span>
+          <span class="stat-label">Total Calculations</span>
+        </div>
       </div>
-    </header>
+    </div>
 
     <!-- User Profile Section -->
     <div id="user-section" class="user-section">
@@ -52,10 +71,36 @@
 
     <!-- Saved Calculations Section -->
     <div id="saved-calculations" class="saved-calculations-container">
-      <h2>Your Saved Calculations</h2>
+      <div class="section-header">
+        <h2>Your Saved Calculations</h2>
+        <div class="filter-controls">
+          <select id="sort-calculations" class="sort-select">
+            <option value="date-desc">Newest First</option>
+            <option value="date-asc">Oldest First</option>
+            <option value="type">By Type</option>
+          </select>
+        </div>
+      </div>
       <div id="calculations-list">
         <!-- Saved calculations will be loaded here -->
         <p class="loading-text">Loading your calculations...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF Preview Modal -->
+  <div id="pdf-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>PDF Preview</h3>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="pdf-preview"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="download-pdf" class="btn btn-primary">Download PDF</button>
+        <button id="cancel-pdf" class="btn btn-secondary">Cancel</button>
       </div>
     </div>
   </div>

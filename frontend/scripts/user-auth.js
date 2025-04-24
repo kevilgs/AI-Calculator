@@ -45,12 +45,13 @@ function initAuth() {
 function updateAuthUI() {
     // Get UI elements that exist on all pages
     const userDisplay = document.getElementById('user-display');
+    const usernameDisplayNav = document.getElementById('username-display-nav');
     const logoutLink = document.getElementById('logout-link');
     const saveCalculationBtn = document.getElementById('save-calculation');
     
-    if (userDisplay) {
-        if (isAuthenticated && currentUser) {
-            // User is logged in
+    if (isAuthenticated && currentUser) {
+        // User is logged in
+        if (userDisplay) {
             userDisplay.style.display = 'inline';
             
             // Update username display
@@ -58,18 +59,24 @@ function updateAuthUI() {
             if (usernameDisplay) {
                 usernameDisplay.textContent = currentUser.username || currentUser.email;
             }
-            
-            // Show save button if it exists and there's a solution
-            if (saveCalculationBtn) {
-                const solutionContainer = document.querySelector('.solution-container');
-                if (solutionContainer && solutionContainer.textContent.trim()) {
-                    saveCalculationBtn.style.display = 'inline-block';
-                }
-            }
-        } else {
-            // User is not logged in - they shouldn't be here, redirect to auth
-            window.location.href = '/auth';
         }
+        
+        // Update navbar username display
+        if (usernameDisplayNav) {
+            usernameDisplayNav.style.display = 'inline';
+            usernameDisplayNav.textContent = `Welcome, ${currentUser.username || currentUser.email}`;
+        }
+        
+        // Show save button if it exists and there's a solution
+        if (saveCalculationBtn) {
+            const solutionContainer = document.querySelector('.solution-container');
+            if (solutionContainer && solutionContainer.textContent.trim()) {
+                saveCalculationBtn.style.display = 'inline-block';
+            }
+        }
+    } else {
+        // User is not logged in - they shouldn't be here, redirect to auth
+        window.location.href = '/auth';
     }
     
     // Setup logout handler
