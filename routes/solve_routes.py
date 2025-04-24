@@ -73,7 +73,7 @@ def solve_equation():
     latex_service = current_app.latex_service
     math_service = current_app.math_service
     ai_service = current_app.ai_service
-    sage_service = current_app.sage_service
+    cache_service = current_app.cache_service  # Get the cache service
 
     # Extract the expression and operation type from the request
     latex_expr = data.get('latex')
@@ -86,6 +86,19 @@ def solve_equation():
     current_app.logger.debug(f"Received LaTeX expression: {latex_expr}")
     current_app.logger.debug(f"Operation type: {operation_type}")
 
+    # Generate a cache key based on operation type and expression
+    # This ensures that the same mathematical problem uses the cached result
+    cache_key = f"{operation_type}_{latex_expr}".replace(" ", "")
+    import hashlib
+    cache_key = hashlib.md5(cache_key.encode('utf-8')).hexdigest()
+    
+    # Check cache first
+    cached_result = cache_service.check_cache(cache_key)
+    if cached_result:
+        current_app.logger.info(f"Cache hit! Using cached result for key: {cache_key}")
+        return jsonify(cached_result)
+
+    # If not in cache, proceed with calculation
     # Preprocess the LaTeX expression
     try:
         # Check for interval in square brackets before converting to sympy
@@ -125,25 +138,16 @@ def solve_equation():
         return jsonify({"error": f"Error processing LaTeX: {str(e)}"}), 400
 
     try:
+        result = None
+        
         if operation_type == 'solve':
-            # First try using MathService for solving equations or systems
+            # Use MathService for solving equations or systems
             try:
                 solution_latex = math_service.solve_equation(expr, is_equation, is_system)
             except Exception as sympy_error:
                 current_app.logger.warning(f"SymPy failed to solve: {str(sympy_error)}")
-                
-                # If SymPy fails and SageMath is available, try with SageMath
-                if sage_service.available:
-                    current_app.logger.info("Falling back to SageMath for solving")
-                    try:
-                        solution_latex = sage_service.solve_complex_equation(expr, is_system)
-                    except Exception as sage_error:
-                        # If both fail, raise the original SymPy error
-                        current_app.logger.error(f"SageMath also failed: {str(sage_error)}")
-                        raise sympy_error
-                else:
-                    # If SageMath is not available, raise the original error
-                    raise sympy_error
+                # Cannot fall back to SageMath - just raise the error
+                raise sympy_error
             
             # Generate AI explanation if requested
             use_ai = data.get('use_ai', True)  # Default to True if not specified
@@ -155,11 +159,11 @@ def solve_equation():
                 # Get explanation from AI service
                 ai_steps = ai_service.get_explanation(problem_description, solution_text)
             
-            return jsonify({
+            result = {
                 "success": True, 
                 "solution": solution_latex, 
                 "ai_steps": ai_steps
-            })
+            }
         elif operation_type == 'laplace':
             # Get the Gemini service
             gemini_service = current_app.gemini_service
@@ -200,15 +204,7 @@ def solve_equation():
                     current_app.logger.info("Successfully computed Laplace transform using symbolic computation")
                 except Exception as sympy_error:
                     current_app.logger.warning(f"Symbolic computation failed: {str(sympy_error)}")
-                    
-                    # Try SageMath as a fallback if SymPy fails
-                    if sage_service.available:
-                        current_app.logger.info("Falling back to SageMath for Laplace transform")
-                        try:
-                            symbolic_result = sage_service.compute_laplace_transform(expr)
-                            current_app.logger.info("Successfully computed Laplace transform using SageMath")
-                        except Exception as sage_error:
-                            current_app.logger.error(f"SageMath also failed: {str(sage_error)}")
+                    # No SageMath fallback available
                 
                 # Step 5: Choose the best result based on available calculations
                 if symbolic_result and gemini_result and _are_results_similar(symbolic_result, gemini_result):
@@ -239,12 +235,12 @@ def solve_equation():
             elif final_solution == gemini_result:
                 solution_method = "gemini"
                 
-            return jsonify({
+            result = {
                 "success": True, 
                 "solution": final_solution,
                 "solution_method": solution_method,
                 "ai_steps": ai_steps
-            })
+            }
         elif operation_type == 'fourier':
             # Get the Gemini service
             gemini_service = current_app.gemini_service
@@ -285,14 +281,21 @@ def solve_equation():
                 ai_steps = ai_service.get_explanation(problem_description, final_solution)
             
             # Always use gemini as the solution method for Fourier series
-            return jsonify({
+            result = {
                 "success": True, 
                 "solution": final_solution, 
                 "solution_method": "gemini",
                 "ai_steps": ai_steps
-            })
+            }
         else:
             return jsonify({"error": "Unsupported operation type"}), 400
+            
+        # Cache the result before returning
+        if result:
+            result["cached"] = False  # Indicate this is freshly calculated
+            cache_service.save_to_cache(cache_key, result)
+            return jsonify(result)
+        
     except Exception as e:
         current_app.logger.error(f"Error in {operation_type} operation: {str(e)}")
         
@@ -308,13 +311,16 @@ def solve_equation():
                 problem_description = f"Compute the Laplace transform of {latex_expr}"
                 ai_steps = current_app.ai_service.get_explanation(problem_description, special_solution)
                 
-            return jsonify({
+            result = {
                 "success": True,
                 "solution": special_solution,
                 "solution_method": "special_case",
                 "ai_steps": ai_steps,
-                "note": "Used special case handler due to calculation complexity"
-            })
+                "note": "Used special case handler due to calculation complexity",
+                "cached": False
+            }
+            cache_service.save_to_cache(cache_key, result)
+            return jsonify(result)
         
         if gemini_service and gemini_service.is_available:
             try:
@@ -342,13 +348,16 @@ def solve_equation():
                             
                         ai_steps = current_app.ai_service.get_explanation(problem_description, gemini_result)
                         
-                    return jsonify({
+                    result = {
                         "success": True,
                         "solution": gemini_result,
                         "solution_method": "gemini_fallback",
                         "ai_steps": ai_steps,
-                        "note": "Used Gemini model as fallback due to calculation errors"
-                    })
+                        "note": "Used Gemini model as fallback due to calculation errors",
+                        "cached": False
+                    }
+                    cache_service.save_to_cache(cache_key, result)
+                    return jsonify(result)
                 else:
                     current_app.logger.warning("Gemini returned empty result")
             except Exception as gemini_error:

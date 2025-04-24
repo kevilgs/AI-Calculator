@@ -127,6 +127,218 @@
   color: var(--text-primary);
 }
 
+/* Text Mode Card Styling */
+.text-mode-card {
+  margin: 1rem auto;
+  max-width: 900px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+}
+
+.text-mode-card .card-header {
+  background: linear-gradient(to right, var(--primary-light), var(--primary));
+  color: white;
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text-mode-card .card-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.operation-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.operation-selector label {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.operation-select {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.operation-select:focus {
+  outline: none;
+  border-color: white;
+}
+
+.text-mode-card .card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.math-text-input {
+  width: 100%;
+  height: 120px;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  resize: vertical;
+  font-size: 1.1rem;
+  font-family: 'Fira Code', monospace, system-ui;
+  background-color: var(--background);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.math-text-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.1);
+}
+
+.preview-wrapper {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 1.2rem;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.preview-header {
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  color: var(--secondary);
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.math-preview {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1rem;
+  background: var(--background);
+  border-radius: 10px;
+  font-size: 1.3rem;
+  border: 1px dashed var(--border);
+  color: var(--text-primary);
+  overflow-x: auto;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.card-footer {
+  padding: 1rem 1.5rem;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-top: 1px solid var(--border);
+}
+
+.typing-hints {
+  max-width: 100%;
+}
+
+.typing-hints h4 {
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+  color: var(--secondary);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.typing-hints ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.5rem;
+  padding-left: 1.5rem;
+  margin: 0;
+}
+
+.typing-hints li {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Solution Container styling */
+.solution-container {
+  margin: 2rem auto;
+  max-width: 900px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+}
+
+.solution-header {
+  background: linear-gradient(to right, var(--secondary-light), var(--secondary));
+  color: white;
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.solution-result {
+  padding: 1.5rem;
+  font-size: 1.4rem;
+  display: flex;
+  justify-content: center;
+  min-height: 80px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.solution-steps {
+  padding: 1rem 1.5rem;
+}
+
+.steps-header {
+  font-weight: 600;
+  color: var(--secondary);
+  margin-bottom: 1rem;
+}
+
+.steps-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.step {
+  line-height: 1.6;
+}
+
+.step p {
+  margin: 0.5rem 0;
+}
+
+.error-message {
+  padding: 1.5rem;
+  color: #e53935;
+  background-color: #ffebee;
+  border-radius: 0;
+  border-left: 4px solid #e53935;
+  font-weight: 500;
+}
+
 /* Error message styling */
 .error {
   color: #e53935;

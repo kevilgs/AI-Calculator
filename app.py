@@ -16,7 +16,6 @@ from services.latex_service import latex_to_sympy
 from services.math_service import MathService
 from services.ai_service import AIService
 from services.cache_service import CacheService
-from services.sage_service import SageService
 from services.gemini_service import GeminiService
 from services.user_service import UserService
 
@@ -78,10 +77,6 @@ def initialize_services(app):
     app.latex_service = lambda: None  # Create a simple object
     app.latex_service.latex_to_sympy = latex_to_sympy
     
-    # SageMath service - for advanced calculations
-    sage_service = SageService()
-    app.sage_service = sage_service
-    
     # Gemini service - for verification of results using LLM
     gemini_service = GeminiService()
     app.gemini_service = gemini_service
@@ -91,11 +86,6 @@ def initialize_services(app):
     app.user_service = user_service
     
     # Log service availability
-    if sage_service.available:
-        app.logger.info("SageMath service is available")
-    else:
-        app.logger.warning("SageMath service is not available - make sure the Docker container is running")
-    
     if gemini_service.is_available:
         app.logger.info("Gemini service is available for result verification")
     else:

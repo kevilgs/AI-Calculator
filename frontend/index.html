@@ -48,8 +48,8 @@
 <body>
   <div class="navbar">
     <div class="navbar-left">
-      <a href="/index.html" class="nav-logo">MathSolver AI</a>
-      <a href="/index.html" class="nav-link active">Calculator</a>
+      <a href="/" class="nav-logo">MathSolver AI</a>
+      <a href="/" class="nav-link active">Calculator</a>
       <a href="/dashboard" class="nav-link">Dashboard</a>
     </div>
     <div class="navbar-right">
@@ -59,23 +59,29 @@
   </div>
 
   <div class="container main-content">
-    <div class="mode-selector-container">
-      <div class="mode-selector">
-        <button class="mode-btn active" data-mode="draw">Draw Mode</button>
-        <button class="mode-btn" data-mode="text">Text Mode</button>
-      </div>
-    </div>
-
     <div class="topic-selection">
-      <label for="operation-type">Select Math Topic:</label>
-      <select id="operation-type">
-        <option value="solve">Equation Solving</option>
-        <option value="laplace">Laplace Transform</option>
-        <option value="fourier">Fourier Series</option>
-      </select>
-      
-      <!-- Save Calculation Button (only shown when logged in and solution available) -->
-      <button id="save-calculation" style="display: none;">Save Calculation</button>
+      <div class="topic-selection-row">
+        <div class="topic-column">
+          <div class="topic-label-container">
+            <label for="operation-type">Select Math Topic:</label>
+            <button id="info-button" class="info-button" title="Input Format Instructions">i</button>
+          </div>
+          <select id="operation-type">
+            <option value="solve">Equation Solving</option>
+            <option value="laplace">Laplace Transform</option>
+            <option value="fourier">Fourier Series</option>
+          </select>
+        </div>
+        <div class="mode-column">
+          <label>Input Mode:</label>
+          <div class="mode-selector">
+            <button class="mode-btn active" data-mode="draw">Draw</button>
+            <button class="mode-btn" data-mode="text">Text</button>
+          </div>
+        </div>
+        <!-- Save Calculation Button (only shown when logged in and solution available) -->
+        <button id="save-calculation" style="display: none;">Save Calculation</button>
+      </div>
     </div>
 
     <main id="main-content">
@@ -84,6 +90,36 @@
 
     <div class="solution-container">
       <!-- The solution and steps will be dynamically added here -->
+    </div>
+  </div>
+
+  <!-- Instruction Popup -->
+  <div class="instruction-popup-overlay" id="instruction-popup-overlay">
+    <div class="instruction-popup">
+      <div class="instruction-popup-header">
+        <h2>Input Format Instructions</h2>
+        <button class="instruction-popup-close" id="close-instruction-popup">&times;</button>
+      </div>
+      <div class="instruction-popup-body">
+        <div class="instruction-popup-section">
+          <h3>Equation Solving</h3>
+          <p id="equation-instructions">
+            <!-- Your equation format instructions will go here -->
+          </p>
+        </div>
+        <div class="instruction-popup-section">
+          <h3>Laplace Transform</h3>
+          <p id="laplace-instructions">
+            <!-- Your Laplace transform format instructions will go here -->
+          </p>
+        </div>
+        <div class="instruction-popup-section">
+          <h3>Fourier Series</h3>
+          <p id="fourier-instructions">
+            <!-- Your Fourier series format instructions will go here -->
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 

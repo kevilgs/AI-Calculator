@@ -40,7 +40,7 @@ body {
   line-height: 1.6;
   margin: 0;
   padding: 0;
-  padding-top: calc(var(--navbar-height) + 20px); /* Add padding for fixed navbar */
+  padding-top: calc(var(--navbar-height)); /* Reduced padding from 20px to 10px */
 }
 
 /* Navbar styles */
@@ -142,16 +142,10 @@ body {
   max-width: 120px; /* Reduced max width */
 }
 
-.mode-selector-container {
-  display: flex;
-  justify-content: center;
-  margin: 1rem 0 2rem;
-}
-
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 1rem; /* Reduced padding from 1.5rem to 1rem */
 }
 
 .main-content {
@@ -180,6 +174,55 @@ body {
   margin-right: 8px;
   color: var(--accent);
   font-size: 1.8rem;
+}
+
+.topic-selection {
+  margin: 1rem 0; /* Reduced top/bottom margin from 1.5rem to 1rem */
+  padding: 1rem 1.5rem;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--secondary);
+}
+
+.topic-selection-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between; /* Changed from flex-start to space-between */
+}
+
+.topic-column, .mode-column {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.topic-selection label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.topic-selection select {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background-color: var(--background);
+  font-size: 1rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  box-shadow: var(--shadow-sm);
+  min-width: 200px;
+}
+
+.topic-selection select:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.1);
 }
 
 .mode-selector {
@@ -212,44 +255,6 @@ body {
   background: linear-gradient(135deg, var(--primary), var(--primary-light));
   color: white;
   box-shadow: 0 3px 8px rgba(98, 0, 234, 0.25);
-}
-
-.topic-selection {
-  margin: 1.5rem 0;
-  padding: 1rem 1.5rem;
-  background: var(--card-bg);
-  border-radius: 12px;
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  align-items: center;
-  border-left: 4px solid var(--secondary);
-}
-
-.topic-selection label {
-  margin-right: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 1rem;
-}
-
-.topic-selection select {
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background-color: var(--background);
-  font-size: 1rem;
-  color: var(--text-primary);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all var(--transition-speed) ease;
-  box-shadow: var(--shadow-sm);
-  min-width: 200px;
-}
-
-.topic-selection select:focus {
-  border-color: var(--primary);
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.1);
 }
 
 .card {
@@ -364,6 +369,146 @@ body {
   transform: translateX(4px);
 }
 
+#save-calculation {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all var(--transition-speed) ease;
+  box-shadow: var(--shadow-sm);
+  margin-left: auto;
+}
+
+#save-calculation:hover {
+  background-color: var(--primary-dark);
+  box-shadow: var(--shadow-md);
+}
+
+/* Instruction Popup Styles */
+.instruction-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+}
+
+.instruction-popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.instruction-popup {
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  transform: translateY(-20px);
+  transition: transform var(--transition-speed) ease;
+  padding: 0;
+  position: relative;
+}
+
+.instruction-popup-overlay.active .instruction-popup {
+  transform: translateY(0);
+}
+
+.instruction-popup-header {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--divider);
+  font-weight: 700;
+  background: linear-gradient(to right, var(--primary), var(--primary-light));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 16px 16px 0 0;
+}
+
+.instruction-popup-body {
+  padding: 1.5rem;
+}
+
+.instruction-popup-section {
+  margin-bottom: 1.5rem;
+}
+
+.instruction-popup-section h3 {
+  font-weight: 600;
+  color: var(--primary);
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+}
+
+.instruction-popup-section p {
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.instruction-popup-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color var(--transition-speed) ease;
+}
+
+.instruction-popup-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.info-button {
+  background-color: var(--primary-light);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.info-button:hover {
+  background-color: var(--primary);
+  transform: scale(1.1);
+  box-shadow: var(--shadow-md);
+}
+
+/* Add info icon and button to the topic selection row */
+.topic-label-container {
+  display: flex;
+  align-items: center;
+}
+
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -389,19 +534,26 @@ body {
     text-align: center;
   }
   
-  .mode-selector {
-    width: 100%;
-    justify-content: center;
+  .topic-selection-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
   
-  .topic-selection {
+  .topic-column, .mode-column {
+    width: 100%;
     flex-direction: column;
-    gap: 0.8rem;
     align-items: flex-start;
   }
   
   .topic-selection select {
     width: 100%;
+  }
+  
+  #save-calculation {
+    width: 100%;
+    margin-top: 1rem;
+    margin-left: 0;
   }
   
   /* Mobile navbar adjustments */
